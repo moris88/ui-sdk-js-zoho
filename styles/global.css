@@ -1,0 +1,13 @@
+h1 {
+	-moz-text-fill-color: transparent;
+	-webkit-text-fill-color: transparent;
+	background-color: #783918;
+	-moz-background-clip: text;
+	-webkit-background-clip: text;
+	background-size: 100%;
+	line-height: 0;
+}
+
+.custom-language-javascript {
+	font-size: 6.5px !important;
+}
