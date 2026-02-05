@@ -1,10 +1,9 @@
 ---
 # try also 'default' to start simple
 theme: seriph
-layout: default
 # random image from a curated Unsplash collection by Anthony
 # like them? see https://unsplash.com/collections/94734566/slidev
-# background: ./assets/images/background.png
+# background: /assets/images/background.png
 # some information about your slides (markdown enabled)
 title: Novità SDK JS per Zoho CRM
 class: text-center
