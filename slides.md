@@ -41,25 +41,30 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 # Cosa Scopriremo Oggi
 
-- 1 Interazione con l'Utente
+- 1 - Interazione con l'Utente
 
 Scopri come raccogliere input, mostrare avvisi e conferme
 con getInput, showAlert, showConﬁrmation e showMessage.
 
-- 2 Gestione dello Stato
+- 2 - Gestione dello Stato
 
 Impara a gestire operazioni lunghe e l'esperienza di
 caricamento con showLoader e hideLoader.
 
-- 3 Integrazione Avanzata
+- 3 - Integrazione Avanzata
 
 Esplora le potenzialità di comunicazione bidirezionale con
 openPopup e sendResponse per widget personalizzati.
 
-- 4 Le Zoho Request Client
+- 4 - Le Zoho Request Client
 
 Analizzeremo le ZRC per effettuare chiamate REST dentro i
 widget (una sorta di invoke 2.0).
+
+<!--
+- Oggi vedremo quattro macro aree: come raccogliere input dall’utente, gestire lo stato con loader, integrare flussi avanzati tra widget diversi e, infine, le Zoho Request Client per fare chiamate API in modo più veloce (detta da zoho).  
+- Questi strumenti ci permettono di scrivere meno codice e rendono le nostre applicazioni più reattive e sicure
+-->
 
 ---
 
@@ -90,6 +95,12 @@ _testo_ → testo (Corsivo)
 Un loader attivo (showLoader) blocca l'apertura di
 altri popup come showAlert, getInput, e showConfirmation.
 
+<!--
+- Tutte le funzioni che vedremo oggi sono accessibili tramite ZDK.Client. Questo ci permette di avere un punto centrale per gestire alert, input, loader e popup.
+- Importante le funzioni supportano la formattazione Markdown.
+- ⚠ Unico punto di attenzione: se showLoader è attivo, altri popup come showAlert o getInput non possono aprirsi. Però lo vedremo più avanti nelle slide.
+-->
+
 ---
 
 # getInput(): Raccolta Dati Flessibile
@@ -108,6 +119,12 @@ getInput(options, heading, accept_message, reject_message)
 ## Configurazione Avanzata
 
 Valori predeﬁniti, liste personalizzate e validazione integrata.
+
+<!--
+- La prima funzione che andiamo a vedere è la getInput() che ci permette di creare form dinamici direttamente nel widget, senza doverli costruire manualmente nel DOM.
+- Abbiamo i testi, numeri, textarea, picklist e multiselect… praticamente tutti gli scenari comuni.
+- Chiamare getInput(options, heading, acceptMessage, rejectMessage) è sufficiente per raccogliere dati strutturati.
+-->
 
 ---
 layout: two-cols
@@ -171,6 +188,12 @@ openPopup: (
 </div>
 </template>
 
+<!--
+- “Possiamo configurare animazioni, dimensioni, posizione e icona di chiusura dei popup.”  
+- 💡 Mostra codice, non leggere i parametri uno per uno, solo far vedere  
+- “Questo permette di aprire popup widget complessi, personalizzando completamente l’esperienza utente.”
+-->
+
 ---
 
 # Esempio Pratico di getInput()
@@ -221,6 +244,10 @@ openPopup: (
 </code>
 </pre>
 
+<!--
+Un esempio pratico di codice da utilizzare
+-->
+
 ---
 
 # Esempio UI di getInput()
@@ -228,6 +255,10 @@ openPopup: (
 <div class="w-full flex justify-center">
 <img src="./assets/images/getinput.png" style="width: 400px; margin-top: 20px;" />
 </div>
+
+<!--
+Output di come si vedrebbe su Zoho CRM
+-->
 
 ---
 
@@ -240,6 +271,15 @@ Le funzioni includono:
 - showMessage()
 - showConfirmation()
 - showAlert()
+
+<!--
+Le prossime funzioni sono:
+- showMessage
+- showConfermation
+- showAlert
+
+queste funzioni aiutano a interagire facilmente con l'utente
+-->
 
 ---
 layout: two-cols
@@ -287,6 +327,10 @@ showMessage: (
 
 </template>
 
+<!--
+- “showMessage serve per notifiche semplici, tipo toast, senza interrompere l’utente.”
+-->
+
 ---
 
 # Esempio UI di showMessage()
@@ -304,6 +348,10 @@ ZDK.Client.showMessage("test description", { type: "error" });
 <img src="./assets/images/warning.png" class="max-w-[180px]" />
 <img src="./assets/images/error.png" class="max-w-[180px]" />
 </div>
+
+<!--
+il parametro type identifica il tipo di alert
+-->
 
 ---
 
@@ -331,6 +379,10 @@ showConfirmation: (
 ) => Promise<boolean>
 ```
 
+<!--
+- “showConfirmation serve per confermare azioni critiche. Dove serve una conferma da parte dell'utente. Restituisce un boolean, utile per flussi condizionali.”
+-->
+
 ---
 
 # Esempio UI di showConfirmation()
@@ -342,6 +394,10 @@ ZDK.Client.showConfirmation("test description", "accept", "reject");
 <div class="w-full flex justify-center mt-8">
 <img src="./assets/images/confirm.png" class="max-w-[480px]" />
 </div>
+
+<!--
+come si vedrebbe sul CRM
+-->
 
 ---
 
@@ -369,6 +425,10 @@ showAlert: (
 ) => Promise<boolean>
 ```
 
+<!--
+- “showAlert serve per semplici messaggi che richiedono attenzione immediata, un solo pulsante per chiudere.”
+-->
+
 ---
 
 # Esempio UI di showAlert()
@@ -380,6 +440,10 @@ ZDK.Client.showAlert("test desciption", "info header", "button close");
 <div class="w-full flex justify-center mt-8">
 <img src="./assets/images/alert.png" class="max-w-[480px]" />
 </div>
+
+<!--
+come si vedrebbe sul CRM, unica differenza da quello precedente la presenza di un solo pulsante.
+-->
 
 ---
 
@@ -398,6 +462,14 @@ Possibili Tipi di Loader:
 - spinner: Copre l'intera pagina, e compare un pop-up con un cerchio che gira.
 - vertical-bar: Copre l'intera pagina, e compare un pop-up con le barre verticali che si muovono.
 - standard: Il classico loader delle Custom Function da pulsante.
+
+<!--
+- Quando facciamo operazioni lunghe e complesse o fetch di dati, il loader è fondamentale. 
+
+Ricordate sempre di chiamare hideLoader() alla fine o in caso di errore, altrimenti la UI rimane bloccata.
+
+- Possiamo scegliere tra spinner, vertical-bar e standard a seconda del contesto.
+-->
 
 ---
 
@@ -426,6 +498,10 @@ fetch("https://api.example.com/data")
   });
 ```
 
+<!--
+Codice di esempio
+-->
+
 ---
 
 # Integrazione Avanzata con openPopup
@@ -437,6 +513,12 @@ Si possono creare flussi di comunicazione bidirezionale tra il widget e un secon
 1. Il widget A apre un popup (widget B) usando openPopup, passando dati personalizzati.
 2. Il widget B riceve i dati, gli elabora e può inviare una risposta al widget A usando $Client.close().
 3. Il widget A riceve la risposta e può aggiornare l'interfaccia o eseguire azioni basate su di essa.
+
+<!--
+Una funzione carina, che potrebbe aprire a scenari interessanti è la openPopup.
+
+- Qui possiamo aprire un popup con un altro widget, passare dati, ricevere risposta e aggiornare la UI dinamicamente.
+-->
 
 ---
 
@@ -471,6 +553,10 @@ Sintassi di openPopup e sendResponse
  */
 ```
 
+<!--
+Codice esempio
+-->
+
 ---
 
 # Sintassi di openPopup
@@ -495,6 +581,10 @@ openPopup: (
 ) => Promise<object | string | number | boolean>
 ```
 
+<!--
+esempio codice
+-->
+
 ---
 
 # Esempio Pratico (Widget A)
@@ -515,6 +605,10 @@ ZDK.Client.openPopup(
   },
 );
 ```
+
+<!--
+esempio di utilizzo per chiamare il secondo widget
+-->
 
 ---
 
@@ -537,6 +631,10 @@ $Client.close({
 });
 ```
 
+<!--
+esempio di codice per rispondere al widget chiamante
+-->
+
 ---
 
 # Esempio UI di openPopup()
@@ -545,6 +643,10 @@ $Client.close({
 <video src="./assets/video/openpopup.webm" controls>
 </video>
 </div>
+
+<!--
+piccolo widget di esempio tramite piccolo video dimostrativo
+-->
 
 ---
 
@@ -557,6 +659,11 @@ Un SDK integrato in Zoho CRM che fornisce un modo uniﬁcato per effettuare chia
 - Richieste API CRM
 - Richieste basate su Connessioni
 - Richieste API Esterne
+
+<!--
+- “Le ZRC ovvero le Zoho Request Client servono per fare chiamate REST uniformi, veloci, senza preoccuparci della autenticazione interna.” 
+- A quanto ho capito sono una evoluzione delle invoke di Zoho
+-->
 
 ---
 
@@ -571,6 +678,10 @@ Un SDK integrato in Zoho CRM che fornisce un modo uniﬁcato per effettuare chia
 - Istanze ZRC riutilizzabili
 - Gestione automatica dei dati JSON
 - Codiﬁca automatica dei parametri di query
+
+<!--
+Possiamo effettuare chiamate API interne o esterne, gestire le connessioni, istanze e hanno un codice più pulito.
+-->
 
 ---
 
@@ -598,6 +709,10 @@ const users = await zrc.get('/crm/v8/users');
   }
 }
 ```
+
+<!--
+- In questo esempio con zrc.get('/crm/v8/users') otteniamo gli utenti.
+-->
 
 ---
 
@@ -627,6 +742,10 @@ const deal = await zrc.post('/crm/v8/Deals', {
 }
 ```
 
+<!--
+- In questo esempio, con zrc.post() possiamo creare record rapidamente, con risposta standardizzata.
+-->
+
 ---
 
 # Esempio Pratico di ZRC
@@ -648,6 +767,10 @@ const sheet_value2 = await sheetZrc.get(
 );
 ```
 
+<!--
+Abbiamo anche la possibilità di usarle esternamente con le connessioni, creando istanze.
+-->
+
 ---
 
 # Conclusioni
@@ -655,7 +778,15 @@ const sheet_value2 = await sheetZrc.get(
 - Le nuove funzionalità di ZDK.Client offrono strumenti potenti e veloci per l'interazione con l'utente e gestire lo stato dell'applicazione.
 - La comunicazione bidirezionale tra widget consente esperienze utente più avanzate e personalizzate.
 - Le Zoho Request Client (ZRC) semplificano le chiamate API.
+- Questi strumenti permettono a chiunque, anche senza esperienza di frontend, di costruire piccoli widget dinamici e interattivi con il minimo sforzo.
 
 ## GRAZIE PER L'ATTENZIONE
 
 ## Domande?
+
+<!--
+- Concludendo SDK JS ora ci offre: raccolta input flessibile, messaggi/alert gestibili, loader, popup bidirezionali e le ZRC per le API.
+- Tutto questo ci permette di scrivere meno codice, avere widget più reattivi e flussi utente avanzati.
+- Con queste implementazioni, chiunque, non ha esperienza di frontend, può costruire piccoli widget con il minimo indispensabile
+- Grazie per l’attenzione! Ho finito.
+-->
